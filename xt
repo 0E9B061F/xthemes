@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# USAGE: xt theme
+#        xt list [QUERY]
+#        xt set NAME
+#        xt blank
+#  DESC: Manage X themes. The currently-selected theme will be linked to by
+#        '~/.current.xtheme'. To use the selected theme, your '.Xresources'
+#        or '.Xdefaults' file must contain a line like 
+#        '#include "/home/USER/.current.theme"'. Any affected X programs
+#        must be restarted before theme changes will become apparent.
+#        The default command is 'theme'
+#    BY: Macquarie <macquarie.sharpless@gmail.com> 2014
+#        grimheart.github.com
+
+XT_THEMEDIR=${HOME}/.Xthemes
+XT_BLANKTHEME=${XT_THEMEDIR}/blank.xtheme
+XT_CURRENTTHEME=${HOME}/.current.xtheme
+XT_CURRENTNAME=$(readlink ${XT_CURRENTTHEME})
+
+
+
+xt.strip() {
+  local filename="${1}"
+  basename "${filename}" .xtheme
+}
+
+
+
+xt.cmd.theme() {
+  [ -n "${XT_CURRENTNAME}" ] && xt.strip "${XT_CURRENTNAME}"
+}
+
+xt.cmd.list() {
+  local query=${1}
+  ls ${XT_THEMEDIR} | grep "^${query}" | sed 's/\.xtheme$//'
+}
+
+xt.cmd.set() {
+  local name=${1}
+  local theme=$(ls ${XT_THEMEDIR} | grep -m1 "^${name}")
+  if [ -n "${theme}" ]; then
+    rm -f "${XT_CURRENTTHEME}" &> /dev/null
+    ln -s "${XT_THEMEDIR}/${theme}" "${XT_CURRENTTHEME}"
+  fi
+  echo "Changed theme to '$(xt.strip "${theme}")'"
+}
+
+xt.cmd.blank() {
+  xt.cmd.set "blank.xtheme"
+}
+
+
+
+xt.main() {
+  local cmd=${1}
+  local args=${@:2}
+  [ -z "${cmd}" ] && cmd="theme"
+  xt.cmd.${cmd} ${args}
+}
+
+xt.main ${@}
+
