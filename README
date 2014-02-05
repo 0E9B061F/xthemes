@@ -1,0 +1,10 @@
+'xs' is a simple tool for managing and switching color themes for programs
+which rely on X resources. A 'style' is a text file containing X resources,
+presumably the '*colorN' directives.  Styles are stored in ~/.Xstyles. The
+style currently in use is linked to from ~/.current.style.
+
+A collection of themes can be found at http://xcolors.net -  to use one of
+these, download the color theme into '~/.Xstyles', then run 'xs set NAME',
+where name is the name of the theme you downloaded. Can't remember the exact
+name? Run 'xs list' to see a list of available themes. Any affected programs
+will have to be restarted before the change takes effect.
