@@ -25,6 +25,17 @@ xt.strip() {
   basename "${filename}" .xtheme
 }
 
+xt.init() {
+  if [ ! -e "${XT_THEMEDIR}" ]; then
+    mkdir "${XT_THEMEDIR}"
+    touch "${XT_BLANKTHEME}"
+  fi
+  if [ "${XT_CURRENTNAME}" ] && [ ! -e "${XT_CURRENTNAME}" ]; then
+    rm "${XT_CURRENTTHEME}"
+    XT_CURRENTNAME=
+  fi
+}
+
 
 
 xt.cmd.theme() {
@@ -56,6 +67,7 @@ xt.main() {
   local cmd=${1}
   local args=${@:2}
   [ -z "${cmd}" ] && cmd="theme"
+  xt.init
   xt.cmd.${cmd} ${args}
 }
 
